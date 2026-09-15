@@ -110,14 +110,35 @@ func AmankanHandler(next http.HandlerFunc) http.HandlerFunc {
 // belum, dikembalikan sebagai map dengan persis dua kunci: "selesai" dan
 // "belum selesai".
 func RekapStatus(toko *TokoTugas) map[string]int {
-	panic("belum diimplementasikan")
+	rekap := map[string]int{
+		"selesai":       0,
+		"belum selesai": 0,
+	}
+	for _, t := range toko.Daftar {
+		if t.Selesai {
+			rekap["selesai"]++
+		} else {
+			rekap["belum selesai"]++
+		}
+	}
+	return rekap
 }
 
 // BuatHandlerTugas mengembalikan HandlerFunc yang menuliskan daftar tugas
 // di toko sebagai teks biasa ke w (satu tugas per baris), diikuti satu
 // baris ringkasan dari RekapStatus.
 func BuatHandlerTugas(toko *TokoTugas) http.HandlerFunc {
-	panic("belum diimplementasikan")
+	return func(w http.ResponseWriter, r *http.Request) {
+		for _, t := range toko.Daftar {
+			status := "belum selesai"
+			if t.Selesai {
+				status = "selesai"
+			}
+			fmt.Fprintf(w, "%d. %s [%s]\n", t.ID, t.Judul, status)
+		}
+		rekap := RekapStatus(toko)
+		fmt.Fprintf(w, "\nRingkasan: %d selesai, %d belum selesai\n", rekap["selesai"], rekap["belum selesai"])
+	}
 }
 
 func main() {
