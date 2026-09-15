@@ -33,6 +33,9 @@ type TokoTugas struct {
 }
 
 func TambahTugas(toko *TokoTugas, judul string) (Task, error) {
+	if strings.TrimSpace(judul) == "" {
+		return Task{}, ErrInputKosong
+	}
 	toko.NextID++
 	tugasBaru := Task{
 		ID:      toko.NextID,
