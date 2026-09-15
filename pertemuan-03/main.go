@@ -53,7 +53,13 @@ func LihatTugas(toko *TokoTugas, id int) (Task, error) {
 }
 
 func HapusTugas(toko *TokoTugas, id int) error {
-	panic("belum diimplementasikan")
+	for i, t := range toko.Daftar {
+		if t.ID == id {
+			toko.Daftar = append(toko.Daftar[:i], toko.Daftar[i+1:]...)
+			return nil
+		}
+	}
+	return nil
 }
 
 // HapusTugasTercatat memanggil HapusTugas, lalu memakai defer untuk
